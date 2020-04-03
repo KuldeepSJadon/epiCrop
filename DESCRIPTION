@@ -12,17 +12,18 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    R (>= 3.4.2)
+    R (>= 3.4.0)
 Imports:
     dplyr,
     stringr,
-    lubridate,
     zoo
 Suggests: 
+    lubridate,
     data.table,
     stats,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 URL: https://github.com/mladencucak/epiCrop

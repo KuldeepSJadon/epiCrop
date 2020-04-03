@@ -9,7 +9,7 @@
 #' @param max_na Maximum proportion of missing values. Set to 0.01 by default.
 #' @param temporal_res By default, the teporal resolution of the output is daily. By changing the argument \code{temporal_res = "hourly"} user will get daily values attached at 12.
 #' @param model_parameters resoulution of the final data to be returned, daily or hourly. If hourly is selected, outputst are returned at noon.
-#' @import stringr dplyr lubridate zoo
+#' @import stringr dplyr zoo
 #' @keywords potato late blight, model, decision support
 #' @return This function returns a \code{data.frame} including columns:
 #' \itemize{
@@ -55,7 +55,7 @@ BlightR <- function(data,
   # Sort columns
   if(!"doy"%in% colnames(data)) data$doy <- lubridate::yday(data$short_date)
 
-  if(is.Date(data[ , "short_date"]) == FALSE){
+  if(lubridate::is.Date(data[ , "short_date"]) == FALSE){
     data[ , "short_date"]<-
       base::as.Date( as.character(data[ , "short_date"]),  "%Y-%m-%d")
   }
