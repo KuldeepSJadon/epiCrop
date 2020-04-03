@@ -8,6 +8,14 @@
 \description{
 Crop disease epidemiology functions and datasets.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/mladencucak/epiCrop}
+  \item Report bugs at \url{https://github.com/mladencucak/epiCrop/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Mladen Cucak \email{mladencucak@gmail.com}
 
