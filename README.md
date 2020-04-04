@@ -9,10 +9,10 @@ weather: Example weather data needed to run the model.
 # How to instal
 The package is not on CRAN so it can be installed directly from this repository. 
 1. Restart r sesion (Ctrl/Cmd+Shift+F10). 
-2. Install `devools` package. 
-3. Install the `BlifgtR` package. 
+2. Install `remotes` package. 
+3. Install the `BligtR` package. 
 
-Or simply run the following code:
+This could be accomplisehed by running the following code:
 ``` r
 .rs.restartR()
 
