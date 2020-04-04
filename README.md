@@ -31,4 +31,4 @@ install.packages("glue",type = "source")
 ```
 
 # Vignette
-Vignette "run_BlightR" explains how to import data, run the mdodel and visualise the results. 
+Vignette "run_BlightR" explains how to import data, run the model and visualise the results. 
