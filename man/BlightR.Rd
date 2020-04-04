@@ -19,14 +19,14 @@ BlightR(data, max_na = NULL, temporal_res = "daily",
 \value{
 This function returns a \code{data.frame} including columns:
 \itemize{
- \item date Date formated as "yyyy-mm-dd"
- \item spor Sporulation risk.
- \item spor_cond Conditions for sporulation.
- \item inf Infection risk.
- \item surv_prob Spore mortality.
- \item risk_si Risk as sum of infection and sporulation reduced by moratlity.
- \item risk_mi
- \item risk Risk as product of sporulation, spore survival and infection.
+ \item \code{"date"}:  Date formated as "yyyy-mm-dd"
+ \item \code{"spor"}: Sporulation risk.
+ \item \code{"spor_cond"}: Conditions for sporulation.
+ \item \code{"inf"}: Infection risk.
+ \item \code{"surv_prob"}: Spore mortality.
+ \item \code{"risk_si"}: Risk as product of infection and sporulation,
+ \item \code{"risk_mi"}: Risk as product of infection and moratlity.
+ \item \code{"risk"} Risk as product of sporulation, spore survival and infection.
 }
 }
 \description{

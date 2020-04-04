@@ -9,19 +9,19 @@
 #' @param max_na Maximum allowed proportion of missing values. Set to 0.01 by default.
 #' @param temporal_res By default, the teporal resolution of the output is daily. By changing the argument \code{temporal_res = "hourly"} user will get daily values attached at 12.
 #' @param model_parameters resoulution of the final data to be returned, daily or hourly. If hourly is selected, outputst are returned at noon.
-#' @import dplyr zoo
+#' @import dplyr
 #' @export
 #' @keywords potato late blight, model, decision support
 #' @return This function returns a \code{data.frame} including columns:
 #' \itemize{
-#'  \item date Date formated as "yyyy-mm-dd"
-#'  \item spor Sporulation risk.
-#'  \item spor_cond Conditions for sporulation.
-#'  \item inf Infection risk.
-#'  \item surv_prob Spore mortality.
-#'  \item risk_si Risk as sum of infection and sporulation reduced by moratlity.
-#'  \item risk_mi
-#'  \item risk Risk as product of sporulation, spore survival and infection.
+#'  \item \code{"date"}:  Date formated as "yyyy-mm-dd"
+#'  \item \code{"spor"}: Sporulation risk.
+#'  \item \code{"spor_cond"}: Conditions for sporulation.
+#'  \item \code{"inf"}: Infection risk.
+#'  \item \code{"surv_prob"}: Spore mortality.
+#'  \item \code{"risk_si"}: Risk as product of infection and sporulation,
+#'  \item \code{"risk_mi"}: Risk as product of infection and moratlity.
+#'  \item \code{"risk"} Risk as product of sporulation, spore survival and infection.
 #' }
 #' @examples
 #' \donttest{
@@ -831,9 +831,8 @@ BlightR <- function(data,
         risk_si = DailyAt(fin$risk_si, 12),
         risk =  DailyAt(fin$risk, 12),
       )
-    fin_hourly <-
+    final <-
       dplyr::bind_cols(data[, c("short_date", "hour")],fin_hourly)
-    final <- fin_hourly
   }
 
   final <- final %>% select(-doy)

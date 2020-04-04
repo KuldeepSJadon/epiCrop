@@ -16,6 +16,8 @@ Depends:
 Imports:
     dplyr
 Suggests: 
+    zoo,
+    utils,
     lubridate,
     stringr,
     data.table,
