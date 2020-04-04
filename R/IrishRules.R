@@ -180,19 +180,26 @@ IrishRules <- function(data,
 
     }
 
-    if(temporal_res == "daily"){
-      if(!"doy"%in% colnames(data)) data$doy <- lubridate::yday(data$short_date)
-      final <-tapply(head(risk, -20), data$short_date, max) %>% as.data.frame()
-    }
-    if(temporal_res == "hourly"){
-      data[["ir"]]<- head(risk,-20) #remove last 20 values that were added to vectors to prevent "Out of bounds" issue
-      final <- data[, c("short_date", "hour", "ir")]
-    }
-
 
 
 
   }
+  if(temporal_res == "daily"){
+    if(!"doy"%in% colnames(data)) data$doy <- lubridate::yday(data$short_date)
+    risk <-
+      tapply(head(risk, -20), data$short_date, max)
+    final <-
+    data %>%
+      dplyr::group_by(doy) %>%
+      dplyr::summarise(date  = unique(short_date)) %>%
+      mutate(ir = risk)%>% select(-doy)
+      }
+  if(temporal_res == "hourly"){
+    data[["ir"]]<- head(risk,-20) #remove last 20 values that were added to vectors to prevent "Out of bounds" issue
+    final <- data[, c("short_date", "hour", "ir")]
+  }
+
+
   return(final)
 
 }
