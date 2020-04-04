@@ -9,7 +9,8 @@
 #' @param max_na Maximum allowed proportion of missing values. Set to 0.01 by default.
 #' @param temporal_res By default, the teporal resolution of the output is daily. By changing the argument \code{temporal_res = "hourly"} user will get daily values attached at 12.
 #' @param model_parameters resoulution of the final data to be returned, daily or hourly. If hourly is selected, outputst are returned at noon.
-#' @import stringr dplyr zoo
+#' @import dplyr zoo
+#' @export
 #' @keywords potato late blight, model, decision support
 #' @return This function returns a \code{data.frame} including columns:
 #' \itemize{
@@ -42,11 +43,13 @@ BlightR <- function(data,
   }
 
   if(any(is.na(data))){
-    na_sum <-
-    base::summary(data) %>% base::as.data.frame() %>% dplyr::filter(.,grepl("NA", Freq)) %>%
+   na_sum <-
+    base::summary(data) %>%
+      base::as.data.frame() %>%
+      dplyr::filter(.,grepl("NA", Freq)) %>%
       select(-Var1) %>%
       rename( Variable =Var2, NAs = Freq ) %>%
-      mutate(NAs = str_extract(NAs , "[[:digit:]]+") %>% as.numeric()) %>%
+      mutate(NAs = as.numeric(regmatches(NAs,gregexpr("\\d+",NAs))[[1]])) %>%
       mutate("Percent[%]"= round(NAs/nrow(data)*100,2))
     print(na_sum)
     warning("Data has missing values!")
@@ -127,8 +130,8 @@ BlightR <- function(data,
   ExtractCol <- function(data, column){
     if(!is.data.frame(data)){stop("The data is not of class data.frame!")}
 
-    if(length(names(data)[str_detect(names(data), fixed(column, ignore_case=TRUE))])>0){
-      col_name <- names(data)[str_detect(names(data), fixed(column, ignore_case=TRUE))]
+    if(length(names(data)[stringr::str_detect(names(data), stringr::fixed(column, ignore_case=TRUE))])>0){
+      col_name <- names(data)[stringr::str_detect(names(data), stringr::fixed(column, ignore_case=TRUE))]
     } else{
       stop("Variable doesnot exist in the data set.")
     }
@@ -488,8 +491,8 @@ BlightR <- function(data,
     # Set the sunset and sunrise manually at 20/6
     # data[data$hour == 20, "daytime"] <- "sunset"
     # data[data$hour == 6, "daytime"] <- "sunrise"
-    if(all(!str_detect(colnames(data), fixed("lon", ignore_case=TRUE)))){  stop("No Longitude reference or it is not named: 'lon'!")}
-    if(all(!str_detect(colnames(data), fixed("lat", ignore_case=TRUE)))){  stop("No Latitude reference or it is not named: 'lat'!")}
+    if(all(!stringr::str_detect(colnames(data), stringr::fixed("lon", ignore_case=TRUE)))){  stop("No Longitude reference or it is not named: 'lon'!")}
+    if(all(!stringr::str_detect(colnames(data), stringr::fixed("lat", ignore_case=TRUE)))){  stop("No Latitude reference or it is not named: 'lat'!")}
 
     lat <- data[[ExtractCol(data, "lat")]]
     lon <- data[[ ExtractCol(data, "lon")]]

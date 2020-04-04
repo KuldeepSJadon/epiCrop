@@ -14,11 +14,10 @@ LazyData: true
 Depends: 
     R (>= 3.4.0)
 Imports:
-    dplyr,
-    stringr,
-    zoo
+    dplyr
 Suggests: 
     lubridate,
+    stringr,
     data.table,
     stats,
     knitr,
