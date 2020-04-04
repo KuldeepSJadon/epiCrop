@@ -13,3 +13,5 @@ expect_equal(
   c(2.325133e-03, 3.162054e-05, 1.989748e-03, 7.352198e-08) ,
   tolerance = 1e-09
 )
+
+expect_equal(ncol(out), 8, label = "No. of columns of the output does not match!")

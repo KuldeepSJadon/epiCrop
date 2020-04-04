@@ -10,7 +10,7 @@ BlightR(data, max_na = NULL, temporal_res = "daily",
 \arguments{
 \item{data}{The weather data formated as \code{data frame}.}
 
-\item{max_na}{Maximum proportion of missing values. Set to 0.01 by default.}
+\item{max_na}{Maximum allowed proportion of missing values. Set to 0.01 by default.}
 
 \item{temporal_res}{By default, the teporal resolution of the output is daily. By changing the argument \code{temporal_res = "hourly"} user will get daily values attached at 12.}
 

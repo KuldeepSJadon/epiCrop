@@ -6,7 +6,7 @@
 #' run separately.
 #'
 #' @param data The weather data formated as \code{data frame}.
-#' @param max_na Maximum proportion of missing values. Set to 0.01 by default.
+#' @param max_na Maximum allowed proportion of missing values. Set to 0.01 by default.
 #' @param temporal_res By default, the teporal resolution of the output is daily. By changing the argument \code{temporal_res = "hourly"} user will get daily values attached at 12.
 #' @param model_parameters resoulution of the final data to be returned, daily or hourly. If hourly is selected, outputst are returned at noon.
 #' @import stringr dplyr zoo
@@ -41,11 +41,29 @@ BlightR <- function(data,
     stop("Weather data is not a data frame!")
   }
 
+  if(any(is.na(data))){
+    na_sum <-
+    base::summary(data) %>% base::as.data.frame() %>% dplyr::filter(.,grepl("NA", Freq)) %>%
+      select(-Var1) %>%
+      rename( Variable =Var2, NAs = Freq ) %>%
+      mutate(NAs = str_extract(NAs , "[[:digit:]]+") %>% as.numeric()) %>%
+      mutate("Percent[%]"= round(NAs/nrow(data)*100,2))
+    print(na_sum)
+    warning("Data has missing values!")
+  }
+
   #If the data has more than max_na proportion of missing values stop the function
   if(is.null(max_na)) max_na <- 0.01
   if (mean(is.na(data[, c("temp", "rhum")])) > max_na){
-    stop("Percentage of missing values for relative humidity and temperature is higher than ", max_na*100, "%!")
+    stop("Percentage of missing values for relative humidity and temperature is higher than ", max_na*100, "%!",
+         ifelse(max_na==0.01, "to change maximum allowed number of NAs to be more than 1%, assign acceptable proportion to max_na argument!",
+                "Consider increasing the max_na or imputation."))
   }
+
+
+
+
+
 
   #Check the format of the data frame
   if(any(apply(data[ , c("temp", "rhum", "sol_rad")],2, is.numeric))==FALSE ){
@@ -60,11 +78,11 @@ BlightR <- function(data,
       base::as.Date( as.character(data[ , "short_date"]),  "%Y-%m-%d")
   }
 
-  if(nrow(data)/unique(data[ , "short_date"]) %>% length()!=24){
+  if(nrow(data)/base::unique(data[ , "short_date"]) %>% length()!=24){
     stop("The weather data needs to have 24 rows per day!")
   }
-  colnames <- c("short_date","doy","temp", "rhum")
-  if(all(colnames %in% colnames(data))==FALSE) stop("Rename column names."); rm(colnames)
+  cnm <- c("short_date","doy","temp", "rhum")
+  if(all(cnm %in% colnames(data))==FALSE) stop("Rename column names."); rm(cnm)
 
 
   # Parameters
