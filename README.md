@@ -7,7 +7,7 @@ IrishRules: PLB model
 weather: Example weather data needed to run the model. 
 
 # How to instal
-The package is not on CRAN so it can be installed directly from this repository.  
+The package is not on CRAN so it can be installed directly from this repository. 
 1. Restart r sesion (Ctrl/Cmd+Shift+F10). 
 2. Install `devools` package. 
 3. Install the `BlifgtR` package. 
@@ -16,19 +16,22 @@ Or simply run the following code:
 ``` r
 .rs.restartR()
 
-if (!"devtools"%in% installed.packages()) {
-  install.packages("devtools", repos = "http://cran.rstudio.com/")
-  library("devtools")
+if (!"remotes"%in% installed.packages()) {
+  install.packages("remotes", repos = "http://cran.rstudio.com/")
+  library("remotes")
 }
 
-install_github("mladencucak/epiCrop", build_vignettes = TRUE)
+remotes::install_github("mladencucak/epiCrop",dependencies = TRUE)
 ```
-Possible problems: 
-- Make sure yoyr R version is up to date (>=3.4.0)
-- You might need to update some packages. Currently `glue` package might cause some troubles.   
+Installing packages that are not on CRAN can be a pain, so there are a  few general notes on what to do.  
+Generally there are always packages that are not If you get an error looking like this while updating your packages: 
 ``` r
-install.packages("glue",type = "source")
+Error: (converted from warning) cannot remove prior installation of package ‘name_of_the_package’
 ```
-
+You might need to update some packages manually to match the *source* version. So, just replace the `name_of_the_package` to match the name of the pacage you are missing/need to update.   
+``` r
+install.packages("name of the package",type = "source")
+```
+After try run the code snipept from the beginig of this section. 
 # Vignette
 Vignette "run_BlightR" explains how to import data, run the model and visualise the results. 
