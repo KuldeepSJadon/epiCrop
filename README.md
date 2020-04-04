@@ -2,8 +2,8 @@
 Set of functions and data for crop disease epidemiology work
 
 # What is in it
-BlightR: PLB model 
-IrishRules: PLB model
+BlightR: PLB model  
+IrishRules: PLB model  
 weather: Example weather data needed to run the model. 
 
 # How to instal
