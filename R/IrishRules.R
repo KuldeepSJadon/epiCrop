@@ -11,6 +11,7 @@
 #' The output will be returned in an hourly resolution.
 #' @keywords Irish Rules, potato late blight, crop disease forecasting
 #' @import dplyr
+#' @importFrom utils head
 #' @export
 #' @return
 #' If the desired output resolution is \code{"hourly"} This function returns a \code{data.frame}

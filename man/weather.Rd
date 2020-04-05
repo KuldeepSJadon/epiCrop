@@ -12,6 +12,7 @@
  \item{long}{Longitude}
  \item{temp}{Temperature °C}
  \item{rhum}{Realtive humidity in percents}
+ \item{rain}{Precipitation in mm}
  \item{sol_rad}{Solar radiation MJ/m2}
 }}
 \source{

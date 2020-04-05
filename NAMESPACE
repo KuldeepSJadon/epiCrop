@@ -3,3 +3,4 @@
 export(BlightR)
 export(IrishRules)
 import(dplyr)
+importFrom(utils,head)
