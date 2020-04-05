@@ -2,5 +2,7 @@
 
 export(BlightR)
 export(IrishRules)
+export(WthCheckImpute)
 import(dplyr)
+importFrom(nasapower,get_power)
 importFrom(utils,head)
