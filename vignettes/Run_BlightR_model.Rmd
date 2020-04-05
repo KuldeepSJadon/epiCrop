@@ -20,13 +20,19 @@ library(epiCrop)
 # Weather data format
 To allow the models to run there is a specific format of weather data required.
 
-```{r}
+```{r, eval=FALSE}
 help(weather)
 ```
-
+Download the weather data file. 
 
 ```{r}
+destination_on_your_pc <- paste0(getwd(),"./epiCrop_weather.csv")
 
+download.file("https://github.com/mladencucak/epiCrop/tree/master/data-raw/weather_OP_2016.csv",
+              destfile = destination_on_your_pc)
+
+#to open the location pass this comand
+shell.exec(getwd()) #check your taskbar 
 ```
 
 

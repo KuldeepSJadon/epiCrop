@@ -85,9 +85,8 @@ WthCheckImpute <- function(data, report = TRUE)
   ###############################################
   #Check data before imputation
   ###############################################
-
+  na_ls <- list()
   #Missing data treatment
-  if (any(is.na(data))) {
     for (z in seq(c("temp", "rhum", "rain", "sol_rad"))) {
       # z = "temp"
       i <- c("temp", "rhum", "rain", "sol_rad")[z]
@@ -109,8 +108,8 @@ WthCheckImpute <- function(data, report = TRUE)
         mean_gap <- mean(crit)
         max_gap <- max(crit)
       } else{
-        mean_gap <- NA
-        max_gap <- NA
+        mean_gap <- 0
+        max_gap <- 0
       }
 
       na_ls[[z]] <-
@@ -127,7 +126,7 @@ WthCheckImpute <- function(data, report = TRUE)
     }
     na_df_before <-
       dplyr::bind_rows(na_ls)
-  }
+
 
 
   ###############################################
@@ -170,7 +169,7 @@ WthCheckImpute <- function(data, report = TRUE)
   na_ls <- list()
 
   #Missing data treatment
-  if (any(is.na(data))) {
+
     for (z in seq(c("temp", "rhum", "rain", "sol_rad"))) {
       # z = "temp"
       i <- c("temp", "rhum", "rain", "sol_rad")[z]
@@ -192,8 +191,8 @@ WthCheckImpute <- function(data, report = TRUE)
         mean_gap <- mean(crit)
         max_gap <- max(crit)
       } else{
-        mean_gap <- NA
-        max_gap <- NA
+        mean_gap <- 0
+        max_gap <- 0
       }
 
       na_ls[[z]] <-
@@ -211,20 +210,19 @@ WthCheckImpute <- function(data, report = TRUE)
     na_df_after <-
       dplyr::bind_rows(na_ls)
     rm(na_ls)
-  }
 
 
+  na_df <- rbind(na_df_before, na_df_after)
 
   data[["rain"]] <- rain
   data[["rhum"]] <- rh
   data[["temp"]] <- temp
-  data[["sol_rad"]] <- sol_rad
 
 
 
   if (report == TRUE)
     return(list(data, na_df))
-  if (report == TRUE)
+  if (report == FALSE)
     return(data)
 }
 
