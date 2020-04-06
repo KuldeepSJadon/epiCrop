@@ -22,6 +22,7 @@ Suggests:
     stringr,
     data.table,
     stats,
+    nasapower,
     knitr,
     rmarkdown,
     testthat

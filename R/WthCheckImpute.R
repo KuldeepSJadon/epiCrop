@@ -1,9 +1,14 @@
-#' Weather interpolation
+#' Weather check&interpolation
 #'
-#' This function calculates potato late blight risk using BlightR model.
-#'
+#' This function check the basic formatting and quality checks of the weather
+#' data. It will also infill shorter gaps of temperature and relative humidity series.
+#' Longer series impuutation for these variables, as well as rain, should be implemented
+#' using multivariate methods. Solar radiation is imputed using \code{nasapower}
+#' package.
 #' @param data The weather data formated as \code{data frame}.
 #' @param report Maximum allowed proportion of missing values. Set to 0.01 by default.
+#' @param infill_gap Maximum alowed gap for interpolation of missing values for temperature and
+#' relative humidity. Default maximium infill gap is set to 12.
 #' @import dplyr
 #' @importFrom nasapower get_power
 #' @export
@@ -12,17 +17,31 @@
 #' @examples
 #' \donttest{
 #' library(epiCrop)
-#' weather[666:674,c("temp","rhum")] <- NA #9 NAs
-#' weather[766:775,c("temp","rhum")] <- NA #10 NAs
-#' weather[866:876,c("temp","rhum")] <- NA #11 NAs
-#' weather[, "sol_rad"] <- NA
-#' weather[5,c("temp","rhum", "rain")] <- 1000 #large values
-#' weather[10,c("temp","rhum", "rain")] <- -9999 #negative
-#' WthCheckImpute(weather)
+#' dt <- epiCrop::weather
+#' dt[5,c("temp","rhum", "rain")] <- 1000 #large values
+#' WthCheckImpute(dt, report = TRUE)
+#' dt <- epiCrop::weather
+#' dt[10,c("temp","rhum", "rain")] <- -9999 #negative
+#' WthCheckImpute(dt)
+#' dt <- epiCrop::weather
+#' dt[5,c("temp","rhum", "rain")] <- 1000 #large values
+#' WthCheckImpute(dt, report = TRUE)
+#' dt <- epiCrop::weather
+#' dt[10,c("temp","rhum", "rain")] <- -9999 #negative value
+#' #by defauld function returns a list with two data frames
+#' out <- WthCheckImpute(dt)
+#' head(out[[1]])
+#' head(out[[2]])
+#'
+#' data <- WthCheckImpute(dt,report = FALSE)
+#' head(data)
 #' }
 
 
-WthCheckImpute <- function(data, report = TRUE)
+WthCheckImpute <- function(data,
+                           report = TRUE,
+                           infill_gap = NULL
+                           )
 {
   data[["rain"]] -> rain
   data[["rhum"]] -> rh
@@ -76,10 +95,6 @@ WthCheckImpute <- function(data, report = TRUE)
     stop("Negative rain values are not possible!")
 
 
-  if (any(data[, c("temp", "rhum", "rain")]))
-    lapply(data[, c("temp", "rhum", "rain", "sol_rad")],
-           function(x)
-             quantile(x, probs = c(.0001, .9999), na.rm = TRUE)) %>% bind_cols()
 
 
   ###############################################
@@ -111,11 +126,15 @@ WthCheckImpute <- function(data, report = TRUE)
         mean_gap <- 0
         max_gap <- 0
       }
+q <-
+    quantile(x, probs = c(.0001, .9999), na.rm = TRUE)
 
       na_ls[[z]] <-
         data.frame(
           data = "raw",
           variable = as.character(i),
+          less0.01perc = q[[1]],
+          more99.99perc= q[[2]],
           percent = percent,
           no_gaps = no_gaps,
           mean_gap = mean_gap,
@@ -126,14 +145,14 @@ WthCheckImpute <- function(data, report = TRUE)
     }
     na_df_before <-
       dplyr::bind_rows(na_ls)
-
+    rm(q, na_ls)
 
 
   ###############################################
   #Infill solar radiation
   ###############################################
 
-  if (sum(is.na(sol_rad)) / length(sol_rad) > .9) {
+  if(sum(is.na(sol_rad)) / length(sol_rad) > .9){
     warning(
       "Solar radiation will be infiled using nasapower package! Active interent connection is necessary. The total daily sum of solar radiation in MJ/m2 values are assigned to 12th hour of each day"
     )
@@ -150,7 +169,10 @@ WthCheckImpute <- function(data, report = TRUE)
     dff$hour <-  12
     data <-
       left_join(data, dff, by = c("short_date", "hour"))
+    data[is.na(data$sol_rad),"sol_rad"] <- 0
   }
+
+if(is.null(infill_gap))infill_gap <- 11
 
   if (sum(is.na(with(data, rain, temp, rhum))) > 0) {
     temp <-
@@ -194,11 +216,15 @@ WthCheckImpute <- function(data, report = TRUE)
         mean_gap <- 0
         max_gap <- 0
       }
+      q <-
+        quantile(x, probs = c(.0001, .9999), na.rm = TRUE)
 
       na_ls[[z]] <-
         data.frame(
           data = "infilled",
           variable = as.character(i),
+          less0.01perc = q[[1]],
+          more99.99perc= q[[2]],
           percent = percent,
           no_gaps = no_gaps,
           mean_gap = mean_gap,
