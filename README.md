@@ -15,15 +15,16 @@ The package is not on CRAN so it can be installed directly from this repository.
 This could be accomplisehed by running the following code:
 ``` r
 .rs.restartR()
-
+Sys.sleep(2)
 if (!"remotes"%in% installed.packages()) {
   install.packages("remotes", repos = "http://cran.rstudio.com/")
   library("remotes")
 }
-
 remotes::install_github("mladencucak/epiCrop",dependencies = TRUE)
 ```
+## Problems
 Installing packages that are not on CRAN can be a pain, so there are a  few general notes on what to do.  
+If you are Windows user it is recomended that you install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
 Generally there are always packages that are not If you get an error looking like this while updating your packages: 
 ``` r
 Error: (converted from warning) cannot remove prior installation of package ‘name_of_the_package’
